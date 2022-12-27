@@ -9,13 +9,13 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 class DefaultLocationTracker(
-    private val locationCLient: FusedLocationProviderClient,
+    private val locationClient: FusedLocationProviderClient,
     private val application: Application
         ): LocationTracker{
 
         override suspend fun getCurrentLocation(): Location? {
             val hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
-                KisobranApplication.appContext,android.Manifest.permission.ACCESS_FINE_LOCATION
+                application,android.Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
 
             val hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
