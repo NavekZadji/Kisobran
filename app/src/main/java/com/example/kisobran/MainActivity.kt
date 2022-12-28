@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity(), KoinComponent {
 
     private val viewModel by viewModel<KisobranViewModel>()
     private var fusedLocationClient: FusedLocationProviderClient? = null
+
     // default postavljeni na Zagreb
     private var zemljopisnaSirina: Double = 46.28
     private var zemljopisnaDuzina: Double = 16.539999
@@ -47,6 +48,16 @@ class MainActivity : AppCompatActivity(), KoinComponent {
 
         fun getLastKnownLocation() {
 
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 505
+            )
+
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION), 506
+            )
+
             val hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
                 application, android.Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
@@ -55,16 +66,7 @@ class MainActivity : AppCompatActivity(), KoinComponent {
                 KisobranApplication.appContext, android.Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
 
-            if (!hasAccessCoarseLocationPermission || !hasAccessFineLocationPermission) {
-
-
-                ActivityCompat.requestPermissions(this,
-                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),505)
-
-                ActivityCompat.requestPermissions(this,
-                    arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION),506)
-
-
+            if (hasAccessCoarseLocationPermission && hasAccessFineLocationPermission) {
 
                 fusedLocationClient?.lastLocation?.addOnSuccessListener { location ->
                     if (location != null) {
@@ -80,6 +82,7 @@ class MainActivity : AppCompatActivity(), KoinComponent {
                 zemljopisnaSirina = 46.28
                 zemljopisnaDuzina = 16.539999
             }
+
         }
 
         lifecycleScope.launch {
