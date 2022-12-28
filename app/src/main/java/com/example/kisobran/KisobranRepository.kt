@@ -25,8 +25,8 @@ class KisobranRepository {
         .client(okHttpClient)
         .build()
         .create(KisobranAPIService::class.java)
-    suspend fun fetchKisobranFromAPI(): Response<KisobranNadskup> {
-        return retrofit.fetchKisobran(latitude = 46.28, longitude = 16.539999, hourly = "weathercode",timezone = "Europe/Berlin")
+    suspend fun fetchKisobranFromAPI(geografskaDuzina : Double,geografskaSirina:Double): Response<KisobranNadskup> {
+        return retrofit.fetchKisobran(latitude = geografskaSirina, longitude = geografskaDuzina, hourly = "weathercode",timezone = "Europe/Berlin")
     }
 
 }

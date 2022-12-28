@@ -1,7 +1,6 @@
 package com.example.kisobran
 
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -20,12 +19,13 @@ import java.time.format.DateTimeFormatter
 class MainActivity : AppCompatActivity(), KoinComponent {
 
     private val viewModel by viewModel<KisobranViewModel>()
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var ZemljopisnaSirina: Double = 0.0
-    private var ZemljopisnaDuzina: Double = 0.0
+    private var fusedLocationClient: FusedLocationProviderClient? = null
+    private var zemljopisnaSirina: Double = 46.28
+    private var zemljopisnaDuzina: Double = 16.539999
 
     @RequiresApi(Build.VERSION_CODES.O)
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")
+
     @RequiresApi(Build.VERSION_CODES.O)
     val vrijemeSad = LocalDateTime.now().format(formatter)
 
@@ -44,29 +44,50 @@ class MainActivity : AppCompatActivity(), KoinComponent {
                 KisobranApplication.appContext, android.Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
 
-            if(!hasAccessCoarseLocationPermission && !hasAccessFineLocationPermission) {
-                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (!hasAccessCoarseLocationPermission && !hasAccessFineLocationPermission) {
+                fusedLocationClient?.lastLocation?.addOnSuccessListener { location ->
                     if (location != null) {
-                        ZemljopisnaSirina = location.latitude
-                        ZemljopisnaDuzina = location.longitude
+                        zemljopisnaSirina = location.latitude
+                        zemljopisnaDuzina = location.longitude
                     }
                     if (location == null) {
                         // default postavljeni na Zagreb
-                        ZemljopisnaSirina = 46.28
-                        ZemljopisnaDuzina = 16.539999
+                        zemljopisnaSirina = 46.28
+                        zemljopisnaDuzina = 16.539999
                     }
                 }
             } else {
-                ZemljopisnaSirina = 46.28
-                ZemljopisnaDuzina = 16.539999
+                zemljopisnaSirina = 46.28
+                zemljopisnaDuzina = 16.539999
             }
         }
 
-        lifecycleScope.launch{
-            val ulazniPodatci = viewModel.getKisobran()
-            val ulazPrimjer = ulazniPodatci.body()?.timezone_abbreviation
-            Log.v("ovdje",ulazPrimjer!!)
-            Log.v("vrijeme",vrijemeSad)
+        lifecycleScope.launch {
+            getLastKnownLocation()
+            // ne radi nista?!
+
+            val ulazniPodatci = viewModel.getKisobran(
+                geografskaSirina = zemljopisnaSirina,
+                geografskaDuzina = zemljopisnaDuzina
+            )
+            val ulazniPrimjer = ulazniPodatci.body()?.timezone_abbreviation
+            val weathercodeNiz = ulazniPodatci.body()?.hourly?.weathercode
+            val timeNiz = ulazniPodatci.body()?.hourly?.time
+            var prviKisovitiIndex = 0
+
+            while(prviKisovitiIndex < weathercodeNiz!!.size){
+                if(weathercodeNiz[prviKisovitiIndex] == 51 || weathercodeNiz[prviKisovitiIndex] == 53 || weathercodeNiz[prviKisovitiIndex] == 55 || weathercodeNiz[prviKisovitiIndex] == 56 || weathercodeNiz[prviKisovitiIndex] == 57 || weathercodeNiz[prviKisovitiIndex] == 61 || weathercodeNiz[prviKisovitiIndex] == 63 || weathercodeNiz[prviKisovitiIndex] == 65 || weathercodeNiz[prviKisovitiIndex] == 66 || weathercodeNiz[prviKisovitiIndex] == 67 || weathercodeNiz[prviKisovitiIndex] == 80 || weathercodeNiz[prviKisovitiIndex] == 81 || weathercodeNiz[prviKisovitiIndex] == 82 || weathercodeNiz[prviKisovitiIndex] == 95 || weathercodeNiz[prviKisovitiIndex] == 96 || weathercodeNiz[prviKisovitiIndex] == 99){
+                    break
+                }
+                prviKisovitiIndex++
+            }
+
+            val prvoKisovitoVrijeme = timeNiz!![prviKisovitiIndex]
+
+            Log.v("ovdje", ulazniPrimjer!!)
+            Log.v("vrijeme", vrijemeSad)
+            Log.v("prvi kisoviti sat", prvoKisovitoVrijeme)
+
         }
 
 
