@@ -11,7 +11,6 @@ interface KisobranAPIService {
         @Query("latitude") latitude: Double,
         @Query("longitude") longitude: Double,
         @Query("hourly") hourly: String,
-        @Query("start_date") start_date: String,
-        @Query("end_date") end_date: String
+        @Query("timezone") timezone: String,
         ): Response<KisobranNadskup>
 }
