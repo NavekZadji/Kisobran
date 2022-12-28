@@ -94,12 +94,15 @@ class MainActivity : AppCompatActivity(), KoinComponent {
             val daniDoKise: Long = ChronoUnit.DAYS.between(vrijemeSad2, vrijemeKise)
             val satiDoKise: Long = ChronoUnit.HOURS.between(vrijemeSad2, vrijemeKise) % 24
 
+            val porukaIspisa : String = "Prva kisa ce biti ${vrijemeKise.dayOfMonth}.${vrijemeKise.monthValue}.${vrijemeKise.year} u " +
+                    "${vrijemeKise.hour} sati , sto je za $daniDoKise dana i $satiDoKise sati"
+
             Log.v("ovdje", ulazniPrimjer!!)
             Log.v("sad sati", vrijemeSad2.toString())
             Log.v("sati do kise", satiDoKise.toString())
             Log.v("dani do kise", daniDoKise.toString())
             Log.v("prvi kisoviti sat", prvoKisovitoVrijeme)
-
+            Log.v("konacna poruka", porukaIspisa)
         }
 
 
