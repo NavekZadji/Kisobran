@@ -2,8 +2,10 @@ package com.example.kisobran
 
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +14,8 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 import org.koin.core.component.KoinComponent
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity(), KoinComponent {
 
@@ -20,6 +24,12 @@ class MainActivity : AppCompatActivity(), KoinComponent {
     private var ZemljopisnaSirina: Double = 0.0
     private var ZemljopisnaDuzina: Double = 0.0
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")
+    @RequiresApi(Build.VERSION_CODES.O)
+    val vrijemeSad = LocalDateTime.now().format(formatter)
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -56,6 +66,7 @@ class MainActivity : AppCompatActivity(), KoinComponent {
             val ulazniPodatci = viewModel.getKisobran()
             val ulazPrimjer = ulazniPodatci.body()?.timezone_abbreviation
             Log.v("ovdje",ulazPrimjer!!)
+            Log.v("vrijeme",vrijemeSad)
         }
 
 
