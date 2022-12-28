@@ -15,6 +15,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.component.KoinComponent
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 class MainActivity : AppCompatActivity(), KoinComponent {
 
@@ -28,6 +29,9 @@ class MainActivity : AppCompatActivity(), KoinComponent {
 
     @RequiresApi(Build.VERSION_CODES.O)
     val vrijemeSad = LocalDateTime.now().format(formatter)
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    val vrijemeSad2 = LocalDateTime.parse(vrijemeSad, formatter)
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,8 +88,16 @@ class MainActivity : AppCompatActivity(), KoinComponent {
 
             val prvoKisovitoVrijeme = timeNiz!![prviKisovitiIndex]
 
+
+            val vrijemeKise = LocalDateTime.parse(prvoKisovitoVrijeme, formatter)
+
+            val daniDoKise: Long = ChronoUnit.DAYS.between(vrijemeSad2, vrijemeKise)
+            val satiDoKise: Long = ChronoUnit.HOURS.between(vrijemeSad2, vrijemeKise) % 24
+
             Log.v("ovdje", ulazniPrimjer!!)
-            Log.v("vrijeme", vrijemeSad)
+            Log.v("sad sati", vrijemeSad2.toString())
+            Log.v("sati do kise", satiDoKise.toString())
+            Log.v("dani do kise", daniDoKise.toString())
             Log.v("prvi kisoviti sat", prvoKisovitoVrijeme)
 
         }
