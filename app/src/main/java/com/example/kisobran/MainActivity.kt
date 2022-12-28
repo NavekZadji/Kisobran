@@ -24,9 +24,6 @@ class MainActivity : AppCompatActivity(), KoinComponent {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        // napraviti check permission ovdje umjesto u DefaultLocationTracker, mozda tako mogu izbjeci dependancy injection
-
         fun getLastKnownLocation() {
 
             val hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
@@ -36,6 +33,7 @@ class MainActivity : AppCompatActivity(), KoinComponent {
             val hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
                 KisobranApplication.appContext, android.Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
+
             if(!hasAccessCoarseLocationPermission && !hasAccessFineLocationPermission) {
                 fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                     if (location != null) {
@@ -56,8 +54,8 @@ class MainActivity : AppCompatActivity(), KoinComponent {
 
         lifecycleScope.launch{
             val ulazniPodatci = viewModel.getKisobran()
-            val ulazPrimjer = ulazniPodatci.body()!!.timezone_abbreviation
-            Log.v("ovdje",ulazPrimjer)
+            val ulazPrimjer = ulazniPodatci.body()?.timezone_abbreviation
+            Log.v("ovdje",ulazPrimjer!!)
         }
 
 
