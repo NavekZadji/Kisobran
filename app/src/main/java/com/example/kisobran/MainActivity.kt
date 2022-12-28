@@ -3,13 +3,12 @@ package com.example.kisobran
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.kisobran.databinding.ActivityMainBinding
-import com.google.android.gms.common.internal.FallbackServiceBroker
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
@@ -56,7 +55,17 @@ class MainActivity : AppCompatActivity(), KoinComponent {
                 KisobranApplication.appContext, android.Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
 
-            if (hasAccessCoarseLocationPermission && hasAccessFineLocationPermission) {
+            if (!hasAccessCoarseLocationPermission || !hasAccessFineLocationPermission) {
+
+
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),505)
+
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION),506)
+
+
+
                 fusedLocationClient?.lastLocation?.addOnSuccessListener { location ->
                     if (location != null) {
                         zemljopisnaSirina = location.latitude
