@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity(), KoinComponent {
 
     private val viewModel by viewModel<KisobranViewModel>()
     private var fusedLocationClient: FusedLocationProviderClient? = null
+    // default postavljeni na Zagreb
     private var zemljopisnaSirina: Double = 46.28
     private var zemljopisnaDuzina: Double = 16.539999
 
@@ -62,7 +63,6 @@ class MainActivity : AppCompatActivity(), KoinComponent {
                         zemljopisnaDuzina = location.longitude
                     }
                     if (location == null) {
-                        // default postavljeni na Zagreb
                         zemljopisnaSirina = 46.28
                         zemljopisnaDuzina = 16.539999
                     }
@@ -81,7 +81,6 @@ class MainActivity : AppCompatActivity(), KoinComponent {
                 geografskaSirina = zemljopisnaSirina,
                 geografskaDuzina = zemljopisnaDuzina
             )
-            val ulazniPrimjer = ulazniPodatci.body()?.timezone_abbreviation
             val weathercodeNiz = ulazniPodatci.body()?.hourly?.weathercode
             val timeNiz = ulazniPodatci.body()?.hourly?.time
             var prviKisovitiIndex = 0
@@ -116,7 +115,7 @@ class MainActivity : AppCompatActivity(), KoinComponent {
             }
 
             if (susa == 1) {
-                val porukaIspisa: String = "Nece biti kise u dogledno vrijeme."
+                val porukaIspisa = "Nece biti kise u dogledno vrijeme."
                 porukaFinal.text = porukaIspisa
             }
 
