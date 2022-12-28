@@ -8,7 +8,9 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.kisobran.databinding.ActivityMainBinding
 import com.google.android.gms.location.FusedLocationProviderClient
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -18,6 +20,9 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 class MainActivity : AppCompatActivity(), KoinComponent {
+
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel by viewModel<KisobranViewModel>()
     private var fusedLocationClient: FusedLocationProviderClient? = null
@@ -37,6 +42,7 @@ class MainActivity : AppCompatActivity(), KoinComponent {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         fun getLastKnownLocation() {
 
@@ -96,6 +102,10 @@ class MainActivity : AppCompatActivity(), KoinComponent {
 
             val porukaIspisa : String = "Prva kisa ce biti ${vrijemeKise.dayOfMonth}.${vrijemeKise.monthValue}.${vrijemeKise.year} u " +
                     "${vrijemeKise.hour} sati , sto je za $daniDoKise dana i $satiDoKise sati"
+
+            porukaFinal.text = porukaIspisa
+
+            // probni ispisi, izbrisati poslije!
 
             Log.v("ovdje", ulazniPrimjer!!)
             Log.v("sad sati", vrijemeSad2.toString())
