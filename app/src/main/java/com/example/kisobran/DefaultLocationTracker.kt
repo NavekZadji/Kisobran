@@ -8,7 +8,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-// fali dependancy injection, u videu https://www.youtube.com/watch?v=eAbKK7JNxCE je koristen Dagger Hilt
+// IZBRISATI
 
 class DefaultLocationTracker(
     private val locationClient: FusedLocationProviderClient,

@@ -9,6 +9,8 @@ import java.util.jar.Manifest
 import kotlin.coroutines.coroutineContext
 import kotlin.coroutines.resume
 
+// IZBRISATI
+
 interface LocationTracker {
     suspend fun getCurrentLocation():Location?
 }
