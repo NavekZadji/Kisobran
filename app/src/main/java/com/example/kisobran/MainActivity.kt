@@ -25,11 +25,13 @@ class MainActivity : AppCompatActivity(), KoinComponent {
     private val binding get() = _binding!!
 
     private val viewModel by viewModel<KisobranViewModel>()
-    private var fusedLocationClient: FusedLocationProviderClient? = null
 
     // default postavljeni na Zagreb
     private var zemljopisnaSirina: Double = 46.28
     private var zemljopisnaDuzina: Double = 16.539999
+
+    private var dohvatLok : DohvatLokacije? = null
+    private var dozvole : DohvatDozvole? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")
@@ -45,49 +47,16 @@ class MainActivity : AppCompatActivity(), KoinComponent {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        lifecycleScope.launch {
 
-        fun getLastKnownLocation() {
-
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 505
-            )
-
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION), 506
-            )
-
-            val hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
-                application, android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-
-            val hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
-                KisobranApplication.appContext, android.Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-
-            if (hasAccessCoarseLocationPermission && hasAccessFineLocationPermission) {
-
-                fusedLocationClient?.lastLocation?.addOnSuccessListener { location ->
-                    if (location != null) {
-                        zemljopisnaSirina = location.latitude
-                        zemljopisnaDuzina = location.longitude
-                    }
-                    if (location == null) {
-                        zemljopisnaSirina = 46.28
-                        zemljopisnaDuzina = 16.539999
-                    }
-                }
-            } else {
-                zemljopisnaSirina = 46.28
-                zemljopisnaDuzina = 16.539999
+            if(dozvole?.provjeriDozvole()!!) {
+                zemljopisnaSirina = dohvatLok?.getCurrentLocation()!![0]
+                zemljopisnaDuzina = dohvatLok?.getCurrentLocation()!![1]
             }
 
-        }
+            // ako nema dozvole onda nastavi dalje s defaultnom Zagreb lokacijom
 
-        lifecycleScope.launch {
-            getLastKnownLocation()
-            // ne radi nista?!
+
 
             val ulazniPodatci = viewModel.getKisobran(
                 geografskaSirina = zemljopisnaSirina,
