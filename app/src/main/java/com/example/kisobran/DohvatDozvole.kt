@@ -9,12 +9,13 @@ class DohvatDozvole : PermissionTracker {
     override suspend fun provjeriDozvole(): Boolean {
 
         /*
-        // registerForActivityResult mi ne prepoznaje kao funkciju
+        // registerForActivityResult mi ne prepoznaje kao funkciju, to je funkcija samo u activitiju https://stackoverflow.com/questions/72026526/cannot-resolve-method-registerforactivityresult
 
         val locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ){}
         */
+
 
         ActivityCompat.requestPermissions(
             MainActivity(),
